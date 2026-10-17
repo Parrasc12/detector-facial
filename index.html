@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101114">
+    <meta name="description" content="Um laboratório visual para observar rostos e expressões localmente.">
+    <title>Estudo de Presença — Laboratório Facial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <svg class="filter-definitions" aria-hidden="true">
+      <filter id="cyanotype">
+        <feColorMatrix type="matrix" values="0.12 0.08 0.05 0 0.02 0.30 0.48 0.22 0 0.05 0.48 0.72 0.92 0 0.10 0 0 0 1 0"/>
+      </filter>
+    </svg>
+
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Estudo de Presença, início">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="brand-name">ESTUDO <b>DE PRESENÇA</b></span>
+      </a>
+      <div class="topbar-meta">
+        <span class="edition-label">CADERNO DE CAMPO <b>01 / 04</b></span>
+        <span class="topbar-divider" aria-hidden="true"></span>
+        <span class="live-indicator" aria-hidden="true"></span>
+        <span>PROCESSAMENTO LOCAL</span>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <section class="workspace" aria-labelledby="page-title">
+        <div class="section-heading">
+          <div class="hero-copy">
+            <p class="eyebrow"><span class="eyebrow-index">A.</span> ATLAS DE MICROEXPRESSÕES <span class="eyebrow-rule"></span> ESTUDO Nº 001</p>
+            <h1 id="page-title">O rosto como<br><em>paisagem.</em></h1>
+            <p class="hero-note">Uma observação em tempo real sobre os pequenos movimentos que atravessam a expressão.</p>
+          </div>
+          <div class="hero-index" aria-label="Lâmina número 01">
+            <span>LÂMINA</span>
+            <strong>01</strong>
+            <i></i>
+            <span>2026</span>
+          </div>
+        </div>
+
+        <section class="stage-card" aria-label="Campo de análise facial">
+          <div class="stage-toolbar">
+            <div class="stage-state" data-state="loading">
+              <span class="state-dot" aria-hidden="true"></span>
+              <span id="status-text" role="status" aria-live="polite">Preparando o detector…</span>
+            </div>
+            <div class="stage-stats" aria-label="Indicadores de processamento">
+              <div class="stat-cell"><span class="stat-label">VÍDEO / FPS</span><strong id="video-fps-value">--</strong></div>
+              <span class="stats-rule" aria-hidden="true"></span>
+              <div class="stat-cell"><span class="stat-label">ANÁLISE / s</span><strong id="analysis-rate-value">--</strong></div>
+              <span class="stats-rule" aria-hidden="true"></span>
+              <div class="stat-cell"><span class="stat-label">ROSTOS</span><strong id="face-count">00</strong></div>
+            </div>
+          </div>
+
+          <div class="stage-viewport" id="stage-viewport">
+            <video id="camera-video" class="stage-media" autoplay muted playsinline hidden></video>
+            <img id="uploaded-photo" class="stage-media" alt="Fotografia selecionada para análise" hidden>
+            <canvas id="overlay-canvas" class="overlay-canvas" aria-hidden="true"></canvas>
+
+            <div class="empty-state" id="empty-state">
+              <div class="plate-graphic" aria-hidden="true">
+                <span class="plate-corner corner-nw"></span><span class="plate-corner corner-ne"></span>
+                <span class="plate-corner corner-sw"></span><span class="plate-corner corner-se"></span>
+                <svg class="plate-diagram" viewBox="0 0 240 180" fill="none">
+                  <path d="M120 13v154M43 90h154" class="diagram-axis"/>
+                  <circle cx="120" cy="90" r="62" class="diagram-orbit"/>
+                  <circle cx="120" cy="90" r="43" class="diagram-orbit diagram-orbit-inner"/>
+                  <path d="M75 104c5-28 23-47 45-47s40 19 45 47M91 78h9m40 0h9M104 112c10 7 22 7 32 0" class="diagram-study"/>
+                  <circle cx="91" cy="78" r="2" class="diagram-point"/>
+                  <circle cx="149" cy="78" r="2" class="diagram-point"/>
+                  <path d="M30 28h18m-9-9v18M192 152h18m-9-9v18" class="diagram-mark"/>
+                </svg>
+                <span class="plate-coordinate coordinate-top">FIG. 01 <b>—</b> RETRATO</span>
+                <span class="plate-coordinate coordinate-bottom">CAMPO AINDA VAZIO</span>
+              </div>
+              <p class="empty-kicker">CAMPO DE OBSERVAÇÃO</p>
+              <p class="empty-title">Aguardando<br><em>presença.</em></p>
+              <p class="empty-copy">Ative a câmera ou escolha uma fotografia para iniciar a leitura.</p>
+              <span class="empty-edition">ESTÚDIO / PLACA Nº 01</span>
+            </div>
+
+            <div class="stage-annotation annotation-left" aria-hidden="true"><span>Y + 0.00</span><i></i><span>X − 0.00</span></div>
+            <div class="stage-coordinates"><span>REGISTRO <b>01—A</b></span><span>CAMPO DE LUZ / 01</span></div>
+            <div class="reveal-flash" id="reveal-flash" aria-hidden="true"></div>
+            <div class="capture-flash" id="capture-flash" aria-hidden="true"></div>
+          </div>
+
+          <div class="stage-footer">
+            <span class="privacy-note"><span class="privacy-icon" aria-hidden="true">◈</span><span>OBSERVAÇÃO PRIVADA</span><span class="footer-muted">Os dados permanecem neste dispositivo.</span></span>
+            <span class="stage-resolution" id="resolution-label">— × — PX</span>
+          </div>
+        </section>
+
+        <section class="controls" aria-label="Controles do campo de análise">
+          <div class="control-group source-controls">
+            <span class="control-prefix" aria-hidden="true">I</span>
+            <button class="button button-primary" id="camera-button" type="button" disabled><span class="button-icon camera-icon" aria-hidden="true"></span><span id="camera-button-label">Ativar câmera</span></button>
+            <button class="button button-secondary" id="photo-button" type="button" disabled><span class="button-icon photo-icon" aria-hidden="true"></span>Escolher foto</button>
+            <input id="photo-input" class="visually-hidden" type="file" accept="image/*" aria-label="Escolher uma fotografia">
+          </div>
+          <div class="control-divider" aria-hidden="true"></div>
+          <div class="control-group display-controls">
+            <span class="control-label">EMULSÃO</span>
+            <div class="segmented-control" role="group" aria-label="Filtro de visualização">
+              <button class="segment-button is-selected" id="cyanotype-button" aria-pressed="true" type="button">Azul de arquivo</button>
+              <button class="segment-button" id="color-button" aria-pressed="false" type="button">Luz natural</button>
+            </div>
+          </div>
+          <button class="button button-capture" id="capture-button" type="button" disabled><span class="capture-lens" aria-hidden="true"></span><span>Fixar quadro</span></button>
+        </section>
+
+        <section class="detail-row" aria-label="Sobreposição e registros">
+          <div class="drawing-options">
+            <div class="subsection-label"><span>II</span> NOTAÇÃO</div>
+            <label class="check-option"><input type="checkbox" id="mesh-toggle" checked><span class="custom-check"></span><span>Malha</span></label>
+            <label class="check-option"><input type="checkbox" id="markers-toggle" checked><span class="custom-check"></span><span>Pontos</span></label>
+            <label class="check-option"><input type="checkbox" id="labels-toggle" checked><span class="custom-check"></span><span>Identificadores</span></label>
+            <label class="check-option mirror-option" id="mirror-option" hidden><input type="checkbox" id="mirror-toggle" checked><span class="custom-check"></span><span>Espelho</span></label>
+          </div>
+          <div class="capture-strip">
+            <div class="strip-heading"><div class="subsection-label"><span>III</span> PROVAS</div><span id="capture-count">00 / 04</span></div>
+            <div class="capture-slots" id="capture-slots" aria-label="Quadros fixados"></div>
+            <button class="clear-captures" id="clear-captures" type="button" disabled>Limpar provas <span aria-hidden="true">↗</span></button>
+          </div>
+        </section>
+
+        <section class="registry-panel" aria-labelledby="registry-title">
+          <div class="registry-heading">
+            <div class="registry-heading-copy">
+              <p class="eyebrow"><span class="eyebrow-index">B.</span> INDEXAÇÃO LOCAL / CONSENTIDA</p>
+              <h2 id="registry-title">Pessoas <em>cadastradas</em></h2>
+            </div>
+            <span class="registry-count" id="registry-count">0 pessoas</span>
+          </div>
+
+          <div class="performance-controls">
+            <div class="performance-mode-block">
+              <label class="performance-select-label" for="performance-mode"><span>IV</span> CADÊNCIA DE LEITURA</label>
+              <select id="performance-mode" class="performance-select">
+                <option value="economy">Economia</option>
+                <option value="balanced" selected>Equilibrado</option>
+                <option value="quality">Qualidade</option>
+              </select>
+            </div>
+            <div class="analysis-readout"><span>ALVO DE ANÁLISE</span><strong id="analysis-target">5 / s</strong></div>
+            <button class="button button-secondary recognition-toggle" id="recognition-toggle" type="button" aria-pressed="false" disabled>Ativar reconhecimento</button>
+            <span class="recognition-state" id="recognition-state">Reconhecimento desligado</span>
+          </div>
+
+          <p class="storage-notice" id="storage-notice" role="status">Verificando armazenamento local…</p>
+          <form class="person-form" id="person-form">
+            <div class="form-field">
+              <label class="form-label" for="person-name"><span>NOME / 01</span></label>
+              <input class="form-input" id="person-name" name="name" type="text" maxlength="60" autocomplete="off" required placeholder="Nome para este registro">
+            </div>
+            <div class="form-field photo-field">
+              <label class="form-label" for="person-photos"><span>IMAGENS DE REFERÊNCIA</span><small>Uma ou mais · o arquivo não é retido</small></label>
+              <input class="form-file" id="person-photos" name="photos" type="file" accept="image/*" multiple>
+            </div>
+            <label class="consent-option"><input id="person-consent" type="checkbox" required><span>Confirmo que a pessoa consentiu com o processamento e o cadastro biométrico desta foto ou imagem da câmera.</span></label>
+            <div class="enrollment-actions">
+              <button class="button button-primary" id="register-person" type="submit" disabled><span>Cadastrar por foto</span><span aria-hidden="true">↗</span></button>
+              <button class="button button-secondary" id="camera-enroll-button" type="button" disabled><span class="camera-live-dot" aria-hidden="true"></span>Cadastrar com câmera ao vivo</button>
+            </div>
+          </form>
+          <p class="biometric-note"><span class="note-index">!</span><span>As imagens são processadas no dispositivo e não são armazenadas. Nome e descritores faciais ficam neste navegador; descritores são dados biométricos sensíveis. As correspondências são estimativas, não confirmação de identidade.</span></p>
+          <div class="registry-list" id="registry-list" aria-live="polite"><p class="registry-empty">Nenhuma pessoa indexada ainda.</p></div>
+        </section>
+      </section>
+
+      <aside class="reading-panel" aria-labelledby="reading-title">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-index">C.</span> LEITURA / SINAL</p>
+            <h2 id="reading-title">Índice de<br><em>expressão.</em></h2>
+          </div>
+          <span class="panel-serial">F—01</span>
+        </div>
+        <div class="panel-rule"><span></span></div>
+        <p class="panel-intro">Quatro medidas visuais, sem leitura clínica ou julgamento emocional.</p>
+        <div class="reading-empty" id="reading-empty">
+          <span class="reading-empty-icon" aria-hidden="true">∅</span>
+          <span>Sem rosto no campo.</span>
+          <span class="reading-empty-hint">A escala aparece quando um rosto é detectado.</span>
+        </div>
+        <div class="reading-results" id="reading-results" hidden>
+          <div class="reading-result"><div class="result-heading"><span class="result-symbol smile-symbol" aria-hidden="true">⌣</span><span>Sorriso</span><strong id="smile-value">0%</strong></div><div class="meter-track"><span class="meter-fill" id="smile-meter"></span></div><span class="result-caption" id="smile-caption">Neutro</span></div>
+          <div class="reading-result"><div class="result-heading"><span class="result-symbol mouth-symbol" aria-hidden="true">◡</span><span>Boca aberta</span><strong id="mouth-value">0%</strong></div><div class="meter-track"><span class="meter-fill" id="mouth-meter"></span></div><span class="result-caption" id="mouth-caption">Fechada</span></div>
+          <div class="reading-result"><div class="result-heading"><span class="result-symbol eyes-symbol" aria-hidden="true">⌒</span><span>Piscada</span><strong id="eyes-value">0%</strong></div><div class="meter-track"><span class="meter-fill" id="eyes-meter"></span></div><span class="result-caption" id="eyes-caption">Olhos abertos</span></div>
+          <div class="reading-result"><div class="result-heading"><span class="result-symbol brows-symbol" aria-hidden="true">⌃</span><span>Sobrancelhas</span><strong id="brows-value">0%</strong></div><div class="meter-track"><span class="meter-fill" id="brows-meter"></span></div><span class="result-caption" id="brows-caption">Relaxadas</span></div>
+        </div>
+        <div class="panel-note"><span class="note-index">Nº 01</span><p>Expressões são estimativas visuais, não avaliações clínicas ou emocionais.</p></div>
+        <div class="panel-bottom"><span>MEDIAPIPE / FACE LANDMARKER</span><span>LOCAL · PRIVADO</span></div>
+      </aside>
+    </main>
+
+    <footer class="page-footer">
+      <span>ESTUDO DE PRESENÇA <b>·</b> UM ATLAS VISUAL DE EXPRESSÕES</span>
+      <span>OBSERVAR É UM VERBO LENTO <i aria-hidden="true">✳</i></span>
+    </footer>
+  </body>
+</html>
